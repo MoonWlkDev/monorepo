@@ -1,6 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Header } from "../header";
+import { useRouter, useSearchParams } from "next/navigation";
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  window.sessionStorage.clear();
+  searchState.query = "";
+
+  vi.mocked(useRouter).mockReturnValue({
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    push: vi.fn(),
+    replace: replaceMock,
+    prefetch: vi.fn(),
+  });
+
+  vi.mocked(useSearchParams).mockImplementation(
+    () => new URLSearchParams(searchState.query) as ReturnType<typeof useSearchParams>,
+  );
+
+  // Keep the existing listPublicListings mock setup.
+});
 
 const mockUsePathname = vi.fn();
 
@@ -54,4 +76,5 @@ describe("Header", () => {
 
     expect(screen.queryByTestId("backend-health-widget")).not.toBeInTheDocument();
   });
+  
 });
